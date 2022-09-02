@@ -45,7 +45,7 @@ def analyse_link():
             count = 0
 
 
-            wd = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER PATH"),chrome_options=chrome_options)
+            wd = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=chrome_options)
 
             wd.get(searchUrl)
             #youtuber_name = searchUrl.split('/')[4]
