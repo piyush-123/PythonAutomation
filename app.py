@@ -88,7 +88,7 @@ def analyse_link():
                 wd.execute_script("window.scrollBy(0, 500)"," ")
                 time.sleep(1)
             print('reached here1')
-            wait = WebDriverWait(wd, 10)
+            wait = WebDriverWait(wd, 15)
             print('reached here2')
             def f2():
                 print("inside f2")
@@ -149,18 +149,21 @@ def analyse_link():
                 return w_count
 
             for i in video_urls:
+                print(i)
                 wd.get(i)
                 wd.maximize_window()
                 wd.execute_script("window.focus();")
                 likes_result.append(wait.until(EC.presence_of_element_located((By.XPATH,
                                                                                "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string"))).text)
 
+                print("reached here 4")
                 wd.execute_script("window.scrollBy(0, 500)", " ")
                 z = 1
                 time.sleep(1)
                 comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
                                                                                  "//*[@id='count']/yt-formatted-string/span[1]"))).text
                 comments_count.append(comments_num)
+                print("reached here 5")
                 total = 0
                 process = True
                 print(comments_count)
