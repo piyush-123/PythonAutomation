@@ -9,9 +9,15 @@ import time
 from selenium import webdriver
 import base64
 import pymongo
-
+import os
 
 app = Flask(__name__)
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--disable-dev-shm-usage")
+chrome_options.add_argument("--no-sandbox")
 
 
 @app.route('/',methods=['GET'])
@@ -39,7 +45,7 @@ def analyse_link():
             count = 0
 
 
-            wd = webdriver.Chrome(executable_path=Driver)
+            wd = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER PATH"),chrome_options=chrome_options)
 
             wd.get(searchUrl)
             #youtuber_name = searchUrl.split('/')[4]
