@@ -88,7 +88,7 @@ def analyse_link():
                 wd.execute_script("window.scrollBy(0, 500)"," ")
                 time.sleep(1)
             print('reached here1')
-            wait = WebDriverWait(wd, 15)
+            wait = WebDriverWait(wd, 1)
             print('reached here2')
             def f2():
                 print("inside f2")
@@ -173,7 +173,7 @@ def analyse_link():
                     total = total + item_count
                     if total < int(comments_num) :
                         wd.execute_script("window.scrollBy(0, 500)", " ")
-                        time.sleep(5)
+                        time.sleep(1)
                     else:
                         process = False
                 final_comments_name.append(commenter)
