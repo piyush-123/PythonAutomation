@@ -87,9 +87,9 @@ def analyse_link():
                 temp = f1()
                 count = count + temp
                 wd.execute_script("window.scrollBy(0, 500)"," ")
-                time.sleep(5)
-
-            wait = WebDriverWait(wd, 15)
+                time.sleep(1)
+            print('reached here1')
+            wait = WebDriverWait(wd, 10)
 
             def f2():
                 w_count = 0
@@ -176,7 +176,7 @@ def analyse_link():
                 commenter = []
                 commenter_desc = []
 
-
+            print('saving now')
             my_db = connection.connect(host="localhost", user="root", passwd="root")
             cursor = my_db.cursor()
             cursor.execute("CREATE DATABASE IF NOT EXISTS webscraping")
