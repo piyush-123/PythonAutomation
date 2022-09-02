@@ -64,7 +64,6 @@ def analyse_link():
                     shorts_query = f"//*[@id='items']/ytd-grid-video-renderer[{i}]/div[1]/ytd-thumbnail/a/div/ytd-thumbnail-overlay-time-status-renderer/span"
                     try:
                         check_short = wd.find_element("xpath", shorts_query).get_attribute('aria-label')
-                        print(check_short)
                         if check_short == "Shorts":
                             ignore = True
                         else:
@@ -92,6 +91,7 @@ def analyse_link():
             wait = WebDriverWait(wd, 10)
             print('reached here2')
             def f2():
+                print("inside f2")
                 w_count = 0
                 reply_count = 0
                 items = wd.find_elements("xpath", "//*[@id='contents']/ytd-comment-thread-renderer")
@@ -163,6 +163,7 @@ def analyse_link():
                 comments_count.append(comments_num)
                 total = 0
                 process = True
+                print(comments_count)
                 print('reached here3')
                 while process:
                     item_count = f2()
