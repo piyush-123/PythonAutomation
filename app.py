@@ -90,7 +90,7 @@ def analyse_link():
                 time.sleep(1)
             print('reached here1')
             wait = WebDriverWait(wd, 10)
-
+            print('reached here2')
             def f2():
                 w_count = 0
                 reply_count = 0
@@ -163,6 +163,7 @@ def analyse_link():
                 comments_count.append(comments_num)
                 total = 0
                 process = True
+                print('reached here3')
                 while process:
                     item_count = f2()
                     total = total + item_count
