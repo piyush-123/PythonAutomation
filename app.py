@@ -118,8 +118,10 @@ def detail_link():
             wd.maximize_window()
             #wd.execute_script("window.focus();")
             time.sleep(1)
-            wd.execute_script("window.scrollBy(0, 300)", " ")
+
             print('l1')
+            likes_result = 0
+            comments_num = 0
             def f2():
 
                 w_count = 0
@@ -184,20 +186,45 @@ def detail_link():
 
             #likes_result = wait.until(EC.presence_of_element_located((By.XPATH,
             #                                                               "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string"))).text
-            likes_result = wd.find_element("xpath",
-                                           "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string").text
+            timer = 0
+
+            while True:
+                try:
+                    likes_check = wd.find_element("xpath",
+                                           "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string")
+                    likes_result = likes_check.text
+                    break
+                except:
+                    if timer < 10:
+                        print('in timer')
+                        wd.execute_script("window.scrollBy(0, 300)", " ")
+                        timer = timer + 1
+                    else:
+                        break
+
+
+            print(likes_result)
             print('l2')
 
             z = 1
             time.sleep(1)
             #comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
             #                                                          "//*[@id='count']/yt-formatted-string/span[1]"))).text
+            timer = 0
 
-            try:
-                comments_num = wd.find_element("xpath", "//*[@id='comment-teaser']/ytd-comments-entry-point-header-renderer/div[1]/div[2]").text
-            except:
-                print('no element')
-                comments_num=2
+            while True:
+                try:
+                    comments_check = wd.find_element("xpath",
+                                                  "//*[@id='comment-teaser']/ytd-comments-entry-point-header-renderer/div[1]/div[2]")
+                    comments_num = comments_check.text
+                    break
+                except:
+                    if timer < 10:
+                        wd.execute_script("window.scrollBy(0, 300)", " ")
+                        timer = timer + 1
+                    else:
+                        break
+
 
             print('l3')
             total = 0
