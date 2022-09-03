@@ -188,14 +188,14 @@ def detail_link():
                                                                            "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string"))).text
 
             print('l2')
-            wd.execute_script("window.scrollBy(0, 500)", " ")
+
             z = 1
             time.sleep(1)
             #comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
             #                                                          "//*[@id='count']/yt-formatted-string/span[1]"))).text
 
             try:
-                comments_num = wd.find_element("xpath", "//*[@id='count']/yt-formatted-string/span[1]").text
+                comments_num = wd.find_element("xpath", "//*[@id='comment-teaser']/ytd-comments-entry-point-header-renderer/div[1]/div[2]").text
             except:
                 print('no element')
                 comments_num=2
