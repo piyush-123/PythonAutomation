@@ -1,5 +1,6 @@
 from flask import Flask,render_template,request,jsonify
 from flask_cors import CORS,cross_origin
+from flask_sqlalchemy import SQLAlchemy
 
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -12,6 +13,21 @@ import pymongo
 import os
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://fjrviynkaqwkrr:cc28dd22119ff4818b4660ffcb2c422c15c39a72b89b5361a17deaf6dea13436@ec2-54-204-241-136.compute-1.amazonaws.com:5432/d360b6ar5bv5os'
+db = SQLAlchemy(app)
+
+class Youtube(db.Model):
+    __tablename__ = 'youtubers'
+    name = db.Column(db.String(40))
+    video_url = db.Column(db.String(100))
+    video_likes = db.Column(db.String(50))
+    video_comments = db.Column(db.String(50))
+
+    def __init__(self,name,video_url,video_likes,video_comments):
+        self.name = name
+        self.video_url = video_url
+        self.video_likes = video_likes
+        self.video_comments = video_comments
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.binary_location = os.environ.get("GOOGLE_CHROME_BIN")
@@ -243,7 +259,9 @@ def detail_link():
                 reviews.append(
                     {"Commenter Name": commenter[i], "Comments": commenter_desc[i],"Reply_cnt":reply_num[i]})
             wd.close()
-
+            youtuber = Youtube('Telusko',searchUrl,likes_result,comments_num)
+            db.session.add(youtuber)
+            db.session.commit()
             client = pymongo.MongoClient(
                 "mongodb+srv://piyush1304:System909@cluster0.gocvn.mongodb.net/?retryWrites=true&w=majority")
 
@@ -267,7 +285,7 @@ def detail_link():
             my_dict = {
                     "Title": video_title,
                    # "Thumbnail_encoded": video_src,
-                    "Comments": video_comment_detail
+                    "Comments": final_comment_details
                 }
             coll.insert_one(my_dict)
 
