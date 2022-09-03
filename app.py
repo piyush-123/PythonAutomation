@@ -118,12 +118,13 @@ def detail_link():
             wd.maximize_window()
             #wd.execute_script("window.focus();")
             time.sleep(1)
-
+            wait = WebDriverWait(wd, 10)
             print('l1')
             likes_result = 0
             comments_num = 0
+
             def f2():
-                
+
                 w_count = 0
                 reply_count = 0
                 items = wd.find_elements("xpath", "//*[@id='contents']/ytd-comment-thread-renderer")
@@ -207,34 +208,21 @@ def detail_link():
 
             print(likes_result)
             print('l2')
-
+            wd.execute_script("window.scrollBy(0, 200)", " ")
             z = 1
-            #time.sleep(1)
-            #comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
-            #                                                          "//*[@id='count']/yt-formatted-string/span[1]"))).text
-            timer = 0
+            time.sleep(1)
+            comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
+                                                                      "//*[@id='count']/yt-formatted-string/span[1]"))).text
 
-            while True:
-                try:
-                    print("checking comments")
-                    comments_check = wd.find_element("xpath",
-                                                  "*[@id='count']/yt-formatted-string/span[1]")
-                    comments_num = comments_check.text
-                    break
-                except:
-                    if timer < 10:
-                        print("intimer")
-                        wd.execute_script("window.scrollBy(0, 300)", " ")
-                        time.sleep(1)
-                        timer = timer + 1
-                    else:
-                        break
+
+
 
 
             print('l3')
             total = 0
             process = True
-
+            print("-->")
+            print(comments_num)
             while process:
                 item_count = f2()
                 total = total + item_count
