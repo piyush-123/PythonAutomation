@@ -14,10 +14,12 @@ import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://fjrviynkaqwkrr:cc28dd22119ff4818b4660ffcb2c422c15c39a72b89b5361a17deaf6dea13436@ec2-54-204-241-136.compute-1.amazonaws.com:5432/d360b6ar5bv5os'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Youtube(db.Model):
     __tablename__ = 'youtubers'
+    id = db.Column(db.Integer,primary_key=True)
     name = db.Column(db.String(40))
     video_url = db.Column(db.String(100))
     video_likes = db.Column(db.String(50))
