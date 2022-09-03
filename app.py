@@ -191,9 +191,14 @@ def detail_link():
             wd.execute_script("window.scrollBy(0, 500)", " ")
             z = 1
             time.sleep(1)
-            comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
-                                                                      "//*[@id='count']/yt-formatted-string/span[1]"))).text
+            #comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
+            #                                                          "//*[@id='count']/yt-formatted-string/span[1]"))).text
 
+            try:
+                comments_num = wd.find_element("xpath", "//*[@id='count']/yt-formatted-string/span[1]").text
+            except:
+                print('no element')
+                comments_num=2
 
             print('l3')
             total = 0
