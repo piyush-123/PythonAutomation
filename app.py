@@ -207,7 +207,7 @@ def detail_link():
             print('l2')
 
             z = 1
-            time.sleep(1)
+            #time.sleep(1)
             #comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
             #                                                          "//*[@id='count']/yt-formatted-string/span[1]"))).text
             timer = 0
