@@ -116,11 +116,9 @@ def detail_link():
             #wd = webdriver.Chrome(executable_path=Driver)
             wd.get(searchUrl)
             wd.maximize_window()
-            wd.execute_script("window.focus();")
+            #wd.execute_script("window.focus();")
             time.sleep(1)
-
-            wait = WebDriverWait(wd, 15)
-
+            wd.execute_script("window.scrollBy(0, 300)", " ")
             print('l1')
             def f2():
 
@@ -184,9 +182,10 @@ def detail_link():
 
                 return w_count
 
-            likes_result = wait.until(EC.presence_of_element_located((By.XPATH,
-                                                                           "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string"))).text
-
+            #likes_result = wait.until(EC.presence_of_element_located((By.XPATH,
+            #                                                               "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string"))).text
+            likes_result = wd.find_element("xpath",
+                                           "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string").text
             print('l2')
 
             z = 1
@@ -210,7 +209,7 @@ def detail_link():
                 print(total)
 
                 if total < int(comments_num):
-                    wd.execute_script("window.scrollBy(0, 500)", " ")
+                    wd.execute_script("window.scrollBy(0, 300)", " ")
                     time.sleep(1)
                 else:
                     process = False
