@@ -215,11 +215,12 @@ def detail_link():
             while True:
                 try:
                     comments_check = wd.find_element("xpath",
-                                                  "//*[@id='comment-teaser']/ytd-comments-entry-point-header-renderer/div[1]/div[2]")
+                                                  "*[@id='count']/yt-formatted-string/span[1]")
                     comments_num = comments_check.text
                     break
                 except:
                     if timer < 10:
+                        print("intimer")
                         wd.execute_script("window.scrollBy(0, 300)", " ")
                         timer = timer + 1
                     else:
