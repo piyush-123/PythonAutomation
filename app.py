@@ -82,7 +82,7 @@ def analyse_link():
 
                 return w_count
 
-            while count < 5 :
+            while count < 50 :
                 temp = f1()
                 count = count + temp
                 wd.execute_script("window.scrollBy(0, 500)"," ")
