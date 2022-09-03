@@ -243,6 +243,34 @@ def detail_link():
                 reviews.append(
                     {"Commenter Name": commenter[i], "Comments": commenter_desc[i],"Reply_cnt":reply_num[i]})
             wd.close()
+
+            client = pymongo.MongoClient(
+                "mongodb+srv://piyush1304:System909@cluster0.gocvn.mongodb.net/?retryWrites=true&w=majority")
+
+            db_mongo = client['webscrapping']
+            coll = db_mongo['youtubers']
+
+            for m in range(len(commenter)):
+                final_comment_details = {}
+
+                video_title = searchUrl
+                #video_src = base64.b64encode(image_urls[m].encode('ascii'))
+                #for k in range(len(final_comments_name[m])):
+                video_commenter = commenter[i]
+                video_comment = commenter_desc[i]
+                video_comment_detail = {
+                        "commenter": video_commenter,
+                        "comments": video_comment
+                    }
+                final_comment_details[str(m)] = video_comment_detail
+
+            my_dict = {
+                    "Title": video_title,
+                   # "Thumbnail_encoded": video_src,
+                    "Comments": video_comment_detail
+                }
+            coll.insert_one(my_dict)
+
             return render_template('details.html',reviews=reviews,url=searchUrl,likes=likes_result,comment_num=comments_num)
         except Exception as e:
             print(e)
