@@ -106,7 +106,7 @@ def detail_link():
         try:
             searchUrl = request.form['video_dt'].replace(" ","")
             Driver = 'chromedriver.exe'
-
+            print(searchUrl)
 
             commenter=[]
             commenter_desc=[]
@@ -121,7 +121,7 @@ def detail_link():
 
             wait = WebDriverWait(wd, 15)
 
-
+            print('l1')
             def f2():
 
                 w_count = 0
@@ -187,6 +187,7 @@ def detail_link():
             likes_result = wait.until(EC.presence_of_element_located((By.XPATH,
                                                                            "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string"))).text
 
+            print('l2')
             wd.execute_script("window.scrollBy(0, 500)", " ")
             z = 1
             time.sleep(1)
@@ -194,12 +195,14 @@ def detail_link():
                                                                       "//*[@id='count']/yt-formatted-string/span[1]"))).text
 
 
+            print('l3')
             total = 0
             process = True
 
             while process:
                 item_count = f2()
                 total = total + item_count
+                print(total)
 
                 if total < int(comments_num):
                     wd.execute_script("window.scrollBy(0, 500)", " ")
