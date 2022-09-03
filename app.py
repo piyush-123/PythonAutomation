@@ -123,7 +123,7 @@ def detail_link():
             likes_result = 0
             comments_num = 0
             def f2():
-
+                
                 w_count = 0
                 reply_count = 0
                 items = wd.find_elements("xpath", "//*[@id='contents']/ytd-comment-thread-renderer")
@@ -190,9 +190,11 @@ def detail_link():
 
             while True:
                 try:
+                    print("checking likes")
                     likes_check = wd.find_element("xpath",
                                            "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string")
                     likes_result = likes_check.text
+
                     break
                 except:
                     if timer < 10:
@@ -214,6 +216,7 @@ def detail_link():
 
             while True:
                 try:
+                    print("checking comments")
                     comments_check = wd.find_element("xpath",
                                                   "*[@id='count']/yt-formatted-string/span[1]")
                     comments_num = comments_check.text
@@ -222,6 +225,7 @@ def detail_link():
                     if timer < 10:
                         print("intimer")
                         wd.execute_script("window.scrollBy(0, 300)", " ")
+                        time.sleep(1)
                         timer = timer + 1
                     else:
                         break
