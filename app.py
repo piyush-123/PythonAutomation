@@ -46,10 +46,8 @@ def analyse_link():
 
 
             wd = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=chrome_options)
-
+            #wd = webdriver.Chrome(executable_path=Driver)
             wd.get(searchUrl)
-            #youtuber_name = searchUrl.split('/')[4]
-            #print(youtuber_name)
             wd.maximize_window()
             wd.execute_script("window.focus();")
             time.sleep(1)
@@ -80,6 +78,7 @@ def analyse_link():
                             title_names.append(title)
                             video_urls.append(video_link)
                             w_count = w_count + 1
+
                 return w_count
 
             while count < 5 :
@@ -87,15 +86,48 @@ def analyse_link():
                 count = count + temp
                 wd.execute_script("window.scrollBy(0, 500)"," ")
                 time.sleep(1)
-            print('reached here1')
-            wait = WebDriverWait(wd, 1)
-            print('reached here2')
+
+            reviews = []
+            for i in range(len(image_urls)):
+                reviews.append({"Video_URL":video_urls[i],"Video_Title":title_names[i],"Video_Thumbnail":image_urls[i]})
+
+
+
+            wd.close()
+            return render_template('results.html',reviews=reviews[0:(len(reviews)-1)])
+        except Exception as e:
+            print(e)
+            return "error"
+
+@app.route('/details',methods=['POST'])
+@cross_origin()
+def detail_link():
+    if request.method == 'POST':
+        try:
+            searchUrl = request.form['video_dt'].replace(" ","")
+            Driver = 'chromedriver.exe'
+
+
+            commenter=[]
+            commenter_desc=[]
+            reply_num = []
+
+            wd = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"), chrome_options=chrome_options)
+            #wd = webdriver.Chrome(executable_path=Driver)
+            wd.get(searchUrl)
+            wd.maximize_window()
+            wd.execute_script("window.focus();")
+            time.sleep(1)
+
+            wait = WebDriverWait(wd, 15)
+
+
             def f2():
-                print("inside f2")
+
                 w_count = 0
                 reply_count = 0
                 items = wd.find_elements("xpath", "//*[@id='contents']/ytd-comment-thread-renderer")
-                for j in range(1,len(items)+1):
+                for j in range(1, len(items) + 1):
                     query1 = f"//*[@id='contents']/ytd-comment-thread-renderer[{j}]/ytd-comment-renderer/div[3]/div[2]/div[1]/div[2]/h3/a/span"
                     query2 = f"//*[@id='contents']/ytd-comment-thread-renderer[{j}]/ytd-comment-renderer/div[3]/div[2]/div[2]/ytd-expander/div/yt-formatted-string/span"
                     try:
@@ -103,9 +135,10 @@ def analyse_link():
                         comment_desc = wd.find_element("xpath", query2).text
                         try:
                             query3 = f"//*[@id='contents']/ytd-comment-thread-renderer[{j}]/div/ytd-comment-replies-renderer/div/div[1]/div[1]/ytd-button-renderer/a/tp-yt-paper-button/yt-formatted-string"
-                            replies = wd.find_element("xpath",query3).text
+                            replies = wd.find_element("xpath", query3).text
                             if replies:
                                 reply_count = int(str(replies).split(' ')[0])
+
 
                         except:
 
@@ -129,6 +162,8 @@ def analyse_link():
                                 if replies:
                                     reply_count = int(str(replies).split(' ')[0])
 
+
+
                             except:
 
                                 reply_count = 0
@@ -139,110 +174,50 @@ def analyse_link():
 
                     if comment_desc:
                         if comment_desc not in commenter_desc:
+
                             commenter.append(comment_name)
                             commenter_desc.append(comment_desc)
+                            reply_num.append(reply_count)
                             w_count = w_count + 1 + reply_count
                         else:
                             w_count = w_count + 1 + reply_count
 
-
                 return w_count
 
-            for i in video_urls:
-                print(i)
-                wd.get(i)
-                wd.maximize_window()
-                wd.execute_script("window.focus();")
-                likes_result.append(wait.until(EC.presence_of_element_located((By.XPATH,
-                                                                               "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string"))).text)
+            likes_result = wait.until(EC.presence_of_element_located((By.XPATH,
+                                                                           "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string"))).text
 
-                print("reached here 4")
-                wd.execute_script("window.scrollBy(0, 500)", " ")
-                z = 1
-                time.sleep(1)
-                comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
-                                                                                 "//*[@id='count']/yt-formatted-string/span[1]"))).text
-                comments_count.append(comments_num)
-                print("reached here 5")
-                total = 0
-                process = True
-                print(comments_count)
-                print('reached here3')
-                while process:
-                    item_count = f2()
-                    total = total + item_count
-                    if total < int(comments_num) :
-                        wd.execute_script("window.scrollBy(0, 500)", " ")
-                        time.sleep(1)
-                    else:
-                        process = False
-                final_comments_name.append(commenter)
-                final_comments_desc.append(commenter_desc)
-                commenter = []
-                commenter_desc = []
-
-            print('saving now')
-            my_db = connection.connect(host="localhost", user="root", passwd="root")
-            cursor = my_db.cursor()
-            cursor.execute("CREATE DATABASE IF NOT EXISTS webscraping")
-            cursor.execute("Use webscraping")
-            cursor.execute("CREATE Table IF NOT EXISTS youtubers(Youtuber_Name Varchar(50),Video_title varchar(100),Video_Thumbnail_link varchar(200),Video_url varchar(100),video_likes varchar(30),video_number_of_comments varchar(30))")
-            for i in range(len(title_names)):
-            #for i in range(2):
-                Youtuber_Name = "Telusko"
-                Video_title = title_names[i]
-                Video_Thumbnail_link = str(image_urls[i])
-                Video_url = str(video_urls[i])
-                video_likes = likes_result[i]
-                video_number_of_cmnts = comments_count[i]
+            wd.execute_script("window.scrollBy(0, 500)", " ")
+            z = 1
+            time.sleep(1)
+            comments_num = wait.until(EC.presence_of_element_located((By.XPATH,
+                                                                      "//*[@id='count']/yt-formatted-string/span[1]"))).text
 
 
-                sql_query = "insert into youtubers(Youtuber_Name,Video_title,Video_Thumbnail_link,Video_url,video_likes,video_number_of_comments) values(%s,%s,%s,%s,%s,%s)"
-                sql_data = (Youtuber_Name,Video_title,Video_Thumbnail_link,Video_url,video_likes,video_number_of_cmnts)
+            total = 0
+            process = True
 
-                try:
-                    cursor.execute(sql_query,sql_data)
-                    my_db.commit()
+            while process:
+                item_count = f2()
+                total = total + item_count
 
-                except Exception as e:
-                    print(e)
-                    return "error occureed in sql"
-
-            client = pymongo.MongoClient(
-                "mongodb+srv://piyush1304:System909@cluster0.gocvn.mongodb.net/?retryWrites=true&w=majority")
-
-            db_mongo = client['webscrapping']
-            coll = db_mongo['youtubers']
-
-            for m in range(len(title_names)):
-                final_comment_details = {}
-
-                video_title = title_names[m]
-                video_src = base64.b64encode(image_urls[m].encode('ascii'))
-                for k in range(len(final_comments_name[m])):
-                    video_commenter = final_comments_name[m][k]
-                    video_comment = final_comments_desc[m][k]
-                    video_comment_detail = {
-                        "commenter":video_commenter,
-                        "comments" : video_comment
-                    }
-                    final_comment_details[str(k)] = video_comment_detail
-
-                my_dict = {
-                    "Title":video_title,
-                    "Thumbnail_encoded":video_src,
-                    "Comments": final_comment_details
-                            }
-                coll.insert_one(my_dict)
+                if total < int(comments_num):
+                    wd.execute_script("window.scrollBy(0, 500)", " ")
+                    time.sleep(1)
+                else:
+                    process = False
+            reviews = []
 
 
+            for i in range(0,len(commenter)):
 
-            return "Record are inserted in SQL and mongo"
+                reviews.append(
+                    {"Commenter Name": commenter[i], "Comments": commenter_desc[i],"Reply_cnt":reply_num[i]})
+            wd.close()
+            return render_template('details.html',reviews=reviews,url=searchUrl,likes=likes_result,comment_num=comments_num)
         except Exception as e:
             print(e)
-            return "error"
-
-
+            return "error in details"
 if __name__ == '__main__':
     app.run()
 
