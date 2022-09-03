@@ -63,7 +63,7 @@ def analyse_link():
             number_items = 0
             count = 0
 
-
+            name = searchUrl.split('/')[4]
             wd = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=chrome_options)
             #wd = webdriver.Chrome(executable_path=Driver)
             wd.get(searchUrl)
@@ -114,7 +114,7 @@ def analyse_link():
 
 
             wd.close()
-            return render_template('results.html',reviews=reviews[0:(len(reviews)-1)])
+            return render_template('results.html',reviews=reviews[0:(len(reviews)-1)],name=name)
         except Exception as e:
             print(e)
             return "error"
@@ -125,6 +125,8 @@ def detail_link():
     if request.method == 'POST':
         try:
             searchUrl = request.form['video_dt'].replace(" ","")
+            name = request.form['video_name']
+            thumbnail = request.form['video_thumbnail']
             Driver = 'chromedriver.exe'
             print(searchUrl)
 
@@ -261,7 +263,7 @@ def detail_link():
                 reviews.append(
                     {"Commenter Name": commenter[i], "Comments": commenter_desc[i],"Reply_cnt":reply_num[i]})
             wd.close()
-            youtuber = Youtube('Telusko',searchUrl,likes_result,comments_num)
+            youtuber = Youtube(name,searchUrl,likes_result,comments_num)
             db.session.add(youtuber)
             db.session.commit()
             client = pymongo.MongoClient(
@@ -269,9 +271,8 @@ def detail_link():
 
             db_mongo = client['webscrapping']
             coll = db_mongo['youtubers']
-
+            final_comment_details = {}
             for m in range(len(commenter)):
-                final_comment_details = {}
 
                 video_title = searchUrl
                 #video_src = base64.b64encode(image_urls[m].encode('ascii'))
@@ -286,7 +287,7 @@ def detail_link():
 
             my_dict = {
                     "Title": video_title,
-                   # "Thumbnail_encoded": video_src,
+                    "Thumbnail" : base64.b64encode(thumbnail.encode('ascii')),
                     "Comments": final_comment_details
                 }
             coll.insert_one(my_dict)
