@@ -50,7 +50,6 @@ def analyse_link():
             #wd = webdriver.Chrome(executable_path=Driver)
             wd.get(searchUrl)
             wd.maximize_window()
-            wd.execute_script("window.focus();")
             time.sleep(1)
 
             def f1():
@@ -82,9 +81,11 @@ def analyse_link():
 
                 return w_count
 
-            while count < 50 :
+            while count < 30 :
                 temp = f1()
+                print(temp)
                 count = count + temp
+                print(count)
                 wd.execute_script("window.scrollBy(0, 500)"," ")
                 time.sleep(1)
 
