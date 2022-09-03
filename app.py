@@ -14,6 +14,7 @@ import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://fjrviynkaqwkrr:cc28dd22119ff4818b4660ffcb2c422c15c39a72b89b5361a17deaf6dea13436@ec2-54-204-241-136.compute-1.amazonaws.com:5432/d360b6ar5bv5os'
+#app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -54,13 +55,7 @@ def analyse_link():
             image_urls = []
             title_names = []
             video_urls = []
-            likes_result = []
-            comments_count = []
-            commenter=[]
-            commenter_desc=[]
-            final_comments_name = []
-            final_comments_desc = []
-            number_items = 0
+
             count = 0
 
             name = searchUrl.split('/')[4]
@@ -101,9 +96,7 @@ def analyse_link():
 
             while count < 30 :
                 temp = f1()
-                print(temp)
                 count = count + temp
-                print(count)
                 wd.execute_script("window.scrollBy(0, 500)"," ")
                 time.sleep(1)
 
@@ -128,7 +121,7 @@ def detail_link():
             name = request.form['video_name']
             thumbnail = request.form['video_thumbnail']
             Driver = 'chromedriver.exe'
-            print(searchUrl)
+
 
             commenter=[]
             commenter_desc=[]
@@ -141,9 +134,9 @@ def detail_link():
             #wd.execute_script("window.focus();")
             time.sleep(1)
             wait = WebDriverWait(wd, 10)
-            print('l1')
+
             likes_result = 0
-            comments_num = 0
+
 
             def f2():
 
@@ -213,7 +206,7 @@ def detail_link():
 
             while True:
                 try:
-                    print("checking likes")
+
                     likes_check = wd.find_element("xpath",
                                            "//*[@id='top-level-buttons-computed']/ytd-toggle-button-renderer/a/yt-formatted-string")
                     likes_result = likes_check.text
@@ -221,15 +214,14 @@ def detail_link():
                     break
                 except:
                     if timer < 10:
-                        print('in timer')
+
                         wd.execute_script("window.scrollBy(0, 300)", " ")
                         timer = timer + 1
                     else:
                         break
 
 
-            print(likes_result)
-            print('l2')
+
             wd.execute_script("window.scrollBy(0, 200)", " ")
             z = 1
             time.sleep(1)
@@ -239,16 +231,13 @@ def detail_link():
 
 
 
-
-            print('l3')
             total = 0
             process = True
-            print("-->")
-            print(comments_num)
+
             while process:
                 item_count = f2()
                 total = total + item_count
-                print(total)
+
 
                 if total < int(comments_num):
                     wd.execute_script("window.scrollBy(0, 300)", " ")
@@ -292,7 +281,7 @@ def detail_link():
                 }
             coll.insert_one(my_dict)
 
-            return render_template('details.html',reviews=reviews,url=searchUrl,likes=likes_result,comment_num=comments_num)
+            return render_template('details.html',reviews=reviews,url=searchUrl,likes=likes_result,comment_num=comments_num,name=name)
         except Exception as e:
             print(e)
             return "error in details"
