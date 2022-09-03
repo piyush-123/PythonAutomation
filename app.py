@@ -256,8 +256,8 @@ def detail_link():
                 video_title = searchUrl
                 #video_src = base64.b64encode(image_urls[m].encode('ascii'))
                 #for k in range(len(final_comments_name[m])):
-                video_commenter = commenter[i]
-                video_comment = commenter_desc[i]
+                video_commenter = commenter[m]
+                video_comment = commenter_desc[m]
                 video_comment_detail = {
                         "commenter": video_commenter,
                         "comments": video_comment
